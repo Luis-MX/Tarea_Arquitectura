@@ -7,5 +7,5 @@ Proporcionado por [CloudAMQP](https://www.cloudamqp.com).
 Para ejecutar el SMAM en su versión remota es necesario realizar los siguientes pasos. Los siguientes pasos asumen que se ha descargado el repositorio.
 
 1. Abrir la terminal.  
-2. Ingresar a la ruta de la versión del SMAM remoto:   `cd Patrones-De-Arquitectura-De-Software/c03/remoto`  
+2. Ingresar a la ruta de la versión del SMAM remoto:   `cd capitulo-04/smam/remoto`  
 3. Ejecutar el simulador: `python simulador.py`  
