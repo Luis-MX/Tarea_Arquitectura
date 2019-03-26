@@ -54,6 +54,14 @@ class Monitor:
         print ""
         print ""
 
+    def print_notification2(self, datetime, id, valueX, valueY, valueZ, name_param, model):
+        print "  ---------------------------------------------------"
+        print "    ADVERTENCIA"
+        print "  ---------------------------------------------------"
+        print "    Posible caida. Se ha detectado un incremento de " + str(name_param) + " (" + str(valueX) + ", " + str(valueY) + ", " + str(valueZ) + ")" + " a las " + str(self.format_datetime(datetime)) + " en el adulto mayor que utiliza el dispositivo " + str(model) + ":" + str(id)
+        print ""
+        print ""
+
     def format_datetime(self, datetime):
         values_datetime = datetime.split(':')
         f_datetime = values_datetime[3] + ":" + values_datetime[4] + " del " + \

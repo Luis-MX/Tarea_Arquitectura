@@ -126,7 +126,7 @@ class XiaomiMyBand:
             delivery_mode=2,))  # Se realiza la publicación del mensaje en el Distribuidor de Mensajes
         connection.close()  # Se cierra la conexión
 
-        time.sleep(1)
+        #time.sleep(1)
 
         message = {}
         message['heart_rate'] = self.simulate_heart_rate()
@@ -152,7 +152,7 @@ class XiaomiMyBand:
             delivery_mode=2,))  # Se realiza la publicación del mensaje en el Distribuidor de Mensajes
         connection.close()  # Se cierra la conexión
 
-        time.sleep(1)
+        #time.sleep(1)
 
         message['blood_preasure'] = self.simulate_blood_preasure()
         message['id'] = str(self.id)
@@ -174,6 +174,35 @@ class XiaomiMyBand:
         channel = connection.channel()
         channel.queue_declare(queue='blood_preasure', durable=True)
         channel.basic_publish(exchange='', routing_key='blood_preasure', body=str(message), properties=pika.BasicProperties(
+            delivery_mode=2,))  # Se realiza la publicación del mensaje en el Distribuidor de Mensajes
+        connection.close()  # Se cierra la conexión
+
+        #time.sleep(1)
+
+        message['x_position'] = self.simulate_x_position()
+        message['y_position'] = self.simulate_y_position()
+        message['z_position'] = self.simulate_z_position()
+        print self.simulate_x_position(), self.simulate_y_position(), self.simulate_z_position()
+        message['id'] = str(self.id)
+        message['datetime'] = self.simulate_datetime()
+        message['producer'] = self.producer
+        message['model'] = self.model
+        message['hardware_version'] = self.hardware_version
+        message['software_version'] = self.software_version
+        # Se establece una configuración básica para conectarse con el
+        # Distribuidor de Mensajes
+        logging.basicConfig()
+        # Se utiliza como parámetro la URL dónde se encuentra el Distribuidor
+        # de Mensajes
+        params = pika.URLParameters(self.url)
+        params.socket_timeout = 5
+        # Se establece la conexión con el Distribuidor de Mensajes
+        connection = pika.BlockingConnection(params)
+        # Se solicita un canal por el cuál se enviarán los signos vitales
+        channel = connection.channel()
+        # Se declara una cola para persistir los mensajes enviados
+        channel.queue_declare(queue='accelerometer', durable=True)
+        channel.basic_publish(exchange='', routing_key='accelerometer', body=str(message), properties=pika.BasicProperties(
             delivery_mode=2,))  # Se realiza la publicación del mensaje en el Distribuidor de Mensajes
         connection.close()  # Se cierra la conexión
 
