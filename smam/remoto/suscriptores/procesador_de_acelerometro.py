@@ -1,30 +1,33 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #-------------------------------------------------------------------------
-# Archivo: procesador_de_ritmo_cardiaco.py
-# Capitulo: 3 Estilo Publica-Subscribe
-# Autor(es): Perla Velasco & Yonathan Mtz.
-# Version: 2.0.1 Mayo 2017
+# Archivo: procesador_de_acelerometro.py
+# Capitulo: 4 Estilo Publica-Subscribe
+# Autor(es): Raúl Bermúdez, Luis Alcalá, Luis Ortiz & Jorge Solís
+# Version: 1.0 Marzo 2019
 # Descripción:
 #
 #   Esta clase define el rol de un suscriptor, es decir, es un componente que recibe mensajes.
 #
 #   Las características de ésta clase son las siguientes:
 #
-#                                  procesador_de_ritmo_cardiaco.py
+#                                  procesador_de_acelerometro.py
 #           +-----------------------+-------------------------+------------------------+
 #           |  Nombre del elemento  |     Responsabilidad     |      Propiedades       |
 #           +-----------------------+-------------------------+------------------------+
 #           |                       |                         |  - Se suscribe a los   |
 #           |                       |                         |    eventos generados   |
 #           |                       |  - Procesar valores     |    por el wearable     |
-#           |     Procesador de     |    extremos del ritmo   |    Xiaomi My Band.     |
-#           |     Ritmo Cardiaco    |    cardiaco.            |  - Define el valor ex- |
-#           |                       |                         |    tremo del ritmo     |
-#           |                       |                         |    cardiaco en 110.    |
+#           |     Procesador del    |    extremos de las      |    Xiaomi My Band.     |
+#           |     Acelerómetro      |    posiciones para      |  - Define el rango de  |
+#           |                       |    detectar una caída.  |    valores extremos    |
+#           |                       |                         |    para las posiciones |
+#           |                       |                         |    en los ejes X, Y    |
+#           |                       |                         |    y Z.                |
 #           |                       |                         |  - Notifica al monitor |
-#           |                       |                         |    cuando un valor ex- |
-#           |                       |                         |    tremo es detectado. |
+#           |                       |                         |    cuando los valores  |
+#           |                       |                         |    extremos son detec- |
+#           |                       |                         |    tados.              |
 #           +-----------------------+-------------------------+------------------------+
 #
 #   A continuación se describen los métodos que se implementaron en ésta clase:
@@ -33,16 +36,16 @@
 #           +------------------------+--------------------------+-----------------------+
 #           |         Nombre         |        Parámetros        |        Función        |
 #           +------------------------+--------------------------+-----------------------+
-#           |                        |                          |  - Recibe los signos  |
-#           |       consume()        |          Ninguno         |    vitales vitales    |
+#           |                        |                          |  - Recibe las posi-   |
+#           |       consume()        |          Ninguno         |    ciones de los ejes |
 #           |                        |                          |    desde el distribui-|
 #           |                        |                          |    dor de mensajes.   |
 #           +------------------------+--------------------------+-----------------------+
 #           |                        |  - ch: propio de Rabbit. |  - Procesa y detecta  |
 #           |                        |  - method: propio de     |    valores extremos   |
-#           |                        |     Rabbit.              |    del ritmo cardiaco.|
-#           |       callback()       |  - properties: propio de |                       |
-#           |                        |     Rabbit.              |                       |
+#           |                        |     Rabbit.              |    de las posiciones  |
+#           |       callback()       |  - properties: propio de |    de los ejes X, Y   |
+#           |                        |     Rabbit.              |    y Z.               |
 #           |                        |  - body: mensaje recibi- |                       |
 #           |                        |     do.                  |                       |
 #           +------------------------+--------------------------+-----------------------+
@@ -52,7 +55,7 @@
 #
 #
 #           Nota: "propio de Rabbit" implica que se utilizan de manera interna para realizar
-#            de manera correcta la recepcion de datos, para éste ejemplo no shubo necesidad
+#            de manera correcta la recepción de datos, para éste ejemplo no hubo necesidad
 #            de utilizarlos y para evitar la sobrecarga de información se han omitido sus
 #            detalles. Para más información acerca del funcionamiento interno de RabbitMQ
 #            puedes visitar: https://www.rabbitmq.com/
@@ -79,7 +82,7 @@ class ProcesadorAcelerometro:
             params.socket_timeout = 5
             # Se establece la conexión con el Distribuidor de Mensajes
             connection = pika.BlockingConnection(params)
-            # Se solicita un canal por el cuál se enviarán los signos vitales
+            # Se solicita un canal por el cuál se enviarán las posiciones de los ejes.
             channel = connection.channel()
             # Se declara una cola para leer los mensajes enviados por el
             # Publicador
@@ -97,8 +100,8 @@ class ProcesadorAcelerometro:
         json_message = self.string_to_json(body)
         if float(json_message['x_position']) <= 0.3 and float(json_message['y_position']) >= 0.7 and float(json_message['z_position']) <= 0.3:
             monitor = Monitor()
-            monitor.print_notification2(json_message['datetime'], json_message['id'], json_message[
-                                       'x_position'], json_message['y_position'], json_message['z_position'], 'aceleración', json_message['model'])
+            monitor.print_notification(json_message['datetime'], json_message['id'], json_message[
+                                       'x_position'], 'aceleración', json_message['model'], y_position=json_message['y_position'], z_position=json_message['z_position'])
         time.sleep(1)
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
