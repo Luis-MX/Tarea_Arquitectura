@@ -125,8 +125,7 @@ class XiaomiMyBand:
         channel.basic_publish(exchange='', routing_key='body_temperature', body=str(message), properties=pika.BasicProperties(
             delivery_mode=2,))  # Se realiza la publicación del mensaje en el Distribuidor de Mensajes
         connection.close()  # Se cierra la conexión
-
-        #time.sleep(1)
+        time.sleep(1)
 
         message = {}
         message['heart_rate'] = self.simulate_heart_rate()
@@ -151,8 +150,7 @@ class XiaomiMyBand:
         channel.basic_publish(exchange='', routing_key='heart_rate', body=str(message), properties=pika.BasicProperties(
             delivery_mode=2,))  # Se realiza la publicación del mensaje en el Distribuidor de Mensajes
         connection.close()  # Se cierra la conexión
-
-        #time.sleep(1)
+        time.sleep(1)
 
         message['blood_preasure'] = self.simulate_blood_preasure()
         message['id'] = str(self.id)
@@ -176,8 +174,7 @@ class XiaomiMyBand:
         channel.basic_publish(exchange='', routing_key='blood_preasure', body=str(message), properties=pika.BasicProperties(
             delivery_mode=2,))  # Se realiza la publicación del mensaje en el Distribuidor de Mensajes
         connection.close()  # Se cierra la conexión
-
-        #time.sleep(1)
+        time.sleep(1)
 
         #Acelerómetro
         message['x_position'] = self.simulate_x_position()
@@ -205,6 +202,7 @@ class XiaomiMyBand:
         channel.basic_publish(exchange='', routing_key='accelerometer', body=str(message), properties=pika.BasicProperties(
             delivery_mode=2,))  # Se realiza la publicación del mensaje en el Distribuidor de Mensajes
         connection.close()  # Se cierra la conexión
+        time.sleep(1)
 
         # Recordatorio
         message['id'] = str(self.id)
@@ -230,6 +228,7 @@ class XiaomiMyBand:
                               properties=pika.BasicProperties(
                                   delivery_mode=2, ))  # Se realiza la publicación del mensaje en el Distribuidor de Mensajes
         connection.close()  # Se cierra la conexión
+        time.sleep(1)
 
 
     def simulate_datetime(self):
