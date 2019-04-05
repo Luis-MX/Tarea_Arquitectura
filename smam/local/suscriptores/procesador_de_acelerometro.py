@@ -73,16 +73,9 @@ class ProcesadorAcelerometro:
 
     def consume(self):
         try:
-            logging.basicConfig()
-            # Url que define la ubicación del Distribuidor de Mensajes
-            url = 'amqp://oevvxuqp:D6vn6A9ErigVUrxOINL-ok-vdD610S_I@wombat.rmq.cloudamqp.com/oevvxuqp'
-            # Se utiliza como parámetro la URL dónde se encuentra el Distribuidor
-            # de Mensajes
-            params = pika.URLParameters(url)
-            params.socket_timeout = 5
             # Se establece la conexión con el Distribuidor de Mensajes
-            connection = pika.BlockingConnection(params)
-            # Se solicita un canal por el cuál se enviarán las posiciones de los ejes.
+            connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+            # Se solicita un canal por el cuál se enviará la posición
             channel = connection.channel()
             # Se declara una cola para leer los mensajes enviados por el
             # Publicador
@@ -104,6 +97,7 @@ class ProcesadorAcelerometro:
                                        'x_position'], 'aceleración', json_message['model'], y_position=json_message['y_position'], z_position=json_message['z_position'])
         time.sleep(1)
         ch.basic_ack(delivery_tag=method.delivery_tag)
+
 
     def string_to_json(self, string):
         message = {}

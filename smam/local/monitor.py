@@ -46,13 +46,27 @@
 
 class Monitor:
 
-    def print_notification(self, datetime, id, value, name_param, model):
+    # Se realizaron modificaciones para poder utilizar este método
+    # para mostrar los mensajes de los distintos procesadores.
+    def print_notification(self, datetime, id, value, name_param, model, y_position=None, z_position=None, dosis=None):
         print "  ---------------------------------------------------"
         print "    ADVERTENCIA"
         print "  ---------------------------------------------------"
-        print "    Se ha detectado un incremento de " + str(name_param) + " (" + str(value) + ")" + " a las " + str(self.format_datetime(datetime)) + " en el adulto mayor que utiliza el dispositivo " + str(model) + ":" + str(id)
-        print ""
-        print ""
+        if y_position is not None:
+            print "    Posible caida. Se ha detectado un incremento de " + str(name_param) + " (" + str(value) + ", " \
+                  + str(y_position) + ", " + str(z_position) + ")" + " a las " + str(
+                self.format_datetime(datetime)) + " en el adulto mayor que utiliza el dispositivo " + str(
+                model) + ":" + str(id)
+            print ""
+        elif dosis is not None:
+            print "    El adulto mayor con id " + str(
+                id) + " debe tomar la dosis " + dosis + " del medicamento " + value + " a las " + str(
+                self.format_datetime(datetime)) + "."
+            print ""
+        else:
+            print "    Se ha detectado un incremento de " + str(name_param) + " (" + str(value) + ")" + " a las " + \
+                  str(self.format_datetime(datetime)) + " en el adulto mayor que utiliza el dispositivo " + str(
+                model) + ":" + str(id)
 
     def format_datetime(self, datetime):
         values_datetime = datetime.split(':')
